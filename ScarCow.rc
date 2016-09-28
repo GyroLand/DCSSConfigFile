@@ -16,10 +16,9 @@ include += HDamage.rc
 message_colour += mute:you're not good enough to have a special ability
 message_colour += mute:@corpse
 
-################################
-# HDATravel bugfixed           #
-# 20160927: added auto_butcher #
-################################
+#####################
+# HDATravel updated #
+#####################
 confirm_butcher = never
 easy_eat_chunks = true
 auto_eat_chunks = true
@@ -135,19 +134,18 @@ autoinscribe += staff of energy:@w1
 :         crawl.mpr("<cyan>Switching to main weapon.</cyan>")
 :         sendkeys('wa')
 :       end
-:     elseif want_to_eat and number_of_chunks() > 0 then
-:       crawl.mpr("<cyan>Autoeating chunks.</cyan>")
-:       sendkeys('e')
 :     elseif you_want_chunks and on_corpses() and not on_chunks() and (not can_not_butcher()) then
 :       if should_animate_skeleton then
 :         crawl.mpr("<cyan>Autocasting Animate Skeleton for chunks.</cyan>")
 :         sendkeys('zA')
-:       else
-:         crawl.mpr("<cyan>Autochopping corpse.</cyan>")
-:         sendkeys('c')
+:       elseif not autobutcher
+:         crawl.mpr("<cyan>Activating autochopping.</cyan>")
+:         crawl.setopt("auto_butcher = true")
+:         autobutcher = true
+:         autoexplore()
 :       end
-:     elseif you_want_chunks and (not (you_are_zin or need_to_recover or on_chunks() or on_corpses() or already_checked)) then
-:       crawl.mpr("<yellow>You may need something to eat soon, looking for food.</yellow>")
+:     elseif you_want_chunks and not autobutcher then
+:       crawl.mpr("<yellow>You may need something to eat soon, activating autobutcher.</yellow>")
 :       crawl.setopt("auto_butcher = true")
 :       autobutcher = true
 :       autoexplore()
@@ -173,9 +171,9 @@ autoinscribe += staff of energy:@w1
 :       if you_are_bloodless and have_potion_of_blood then
 :         crawl.mpr("<cyan>Autoquaffing potion of blood.</cyan>")
 :         sendkeys('q1')
-:				else
-:			    rest()
-:				end
+:	else
+:	 rest()
+:	end
 :     elseif you_are_yred and (you.piety_rank() >= 3) and (item_in_view("corpse") or item_in_view("skeleton") or on_corpses()) and not recently_mass_animated() then
 :       crawl.mpr("<cyan>Autocasting Mass Animate Remains.</cyan>")
 :       sendkeys('aa')
